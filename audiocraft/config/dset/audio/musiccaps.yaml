@@ -1,0 +1,10 @@
+# @package __global__
+
+datasource:
+  max_sample_rate: 32000
+  max_channels: 1
+  
+  train: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/train.jsonl.gz
+  valid: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
+  evaluate: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
+  generate: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
