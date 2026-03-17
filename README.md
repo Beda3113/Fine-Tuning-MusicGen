@@ -136,7 +136,7 @@ data/musiccaps_complete/
 | Недействительные ссылки | Пропуск видео, помеченных как удаленные/приватные | 2311 файлов пропущено |
 | Ошибки соединения | Повторные попытки (3 retries) | Только 78 ошибок |
 
-[**ДАТАСЕТ НА ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete)
+[**ДАТАСЕТ НА ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/audio)
 
 Часть 1.2: Обогащение метаданных
 ```
@@ -160,7 +160,7 @@ part1.2_enrich_metadata.py
 * Рядом с WAV файлами в audio/ (согласно требованию)
 
 
-[**metadata ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/audio/metadata)
+[**metadata ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/metadata)
 
 
 ## Часть 1.3: Модификация AudioCraft
@@ -232,81 +232,38 @@ def to_condition_attributes(self) -> ConditioningAttributes:
 Модифицированный AudioCraft готов к использованию структурированных данных для обучения
 
 
-## Части 1.4: Настройка конфигов и запуск обучения
+# Отчет по Части 1.4: Настройка конфигов и запуск обучения
 
-1. Создание манифестов train/valid
-2. Создание конфигурационных файлов
- 2.1 Конфиг датасета audiocraft/config/dset/audio/musiccaps.yaml
-```
-   # @package __global__
+## 1. Создание манифестов train/valid
+- Из 3098 записей созданы train (2788, 90%) и valid (310, 10%)
+- Файлы сохранены в формате .jsonl.gz (требование AudioCraft)
+- Результат: `train.jsonl.gz` (0.5 MB), `valid.jsonl.gz` (0.1 MB)
 
-datasource:
-  max_sample_rate: 32000
-  max_channels: 1
-  
-  train: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/train.jsonl.gz
-  valid: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
-  evaluate: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
-  generate: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
-  ```
-2.2 Конфиг обучения audiocraft/config/solver/musicgen/musicgen_finetune.yaml
+## 2. Конфигурация Hydra
 
-```
-# @package __global__
+### 2.1 Конфиг датасета `musiccaps.yaml`
+- Указаны пути к train/valid манифестам
+- Параметры: sample_rate=32000, channels=1
 
-defaults:
-  - musicgen/default
-  - /model: lm/musicgen_lm
-  - override /dset: audio/musiccaps
-  - _self_
+### 2.2 Конфиг обучения `musicgen_finetune.yaml`
+- Базовая модель: `musicgen-small`
+- Batch size: 4 (оптимально для V100 16GB)
+- Epochs: 10
+- Learning rate: 1e-4
 
-autocast: true
-autocast_dtype: float16
+## 3. Параметры Classifier-Free Guidance (CFG)
 
-# Используем предобученную MusicGen-small
-compression_model_checkpoint: //reference/facebook/musicgen-small
+| Параметр | Значение | Назначение |
+|----------|----------|------------|
+| `merge_text_p` | 0.25 | Объединение всех полей |
+| `drop_desc_p` | 0.5 | Удаление description |
+| `drop_other_p` | 0.5 | Удаление других полей |
 
-channels: 1
-sample_rate: 32000
-
-deadlock:
-  use: true
-
-dataset:
-  batch_size: 4  # Для V100 16GB
-  num_workers: 4
-  segment_duration: 10
-  min_segment_ratio: 1.0
-  sample_on_weight: false
-  sample_on_duration: false
-  
-  train:
-    # Параметры для работы с новыми полями и CFG
-    merge_text_p: 0.25    # 25% - объединение всех полей
-    drop_desc_p: 0.5      # 50% - удаление description
-    drop_other_p: 0.5     # 50% - удаление других полей
-
-optim:
-  epochs: 10
-  optimizer: adamw
-  lr: 1e-4
-  ema:
-    use: true
-    updates: 10
-    device: cuda
-
-logging:
-  log_tensorboard: true
-  log_wandb: false
-
-schedule:
-  lr_scheduler: inverse_sqrt
-  inverse_sqrt:
-    warmup: 1500
-    warmup_init_lr: 0.0
-
-checkpoint:
-  save_every: 5
-  keep_last: 3
-```
+## 4. Запуск обучения
+```powershell
+conda activate audiocraft
+cd audiocraft
+$env:AUDIOCRAFT_TEAM = "default"
+$env:CUDA_VISIBLE_DEVICES = "1"
+python -m dora run solver=musicgen/musicgen_finetune
 
