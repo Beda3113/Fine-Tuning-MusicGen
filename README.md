@@ -2,10 +2,7 @@
 
 
 ```
-│
-├── ДЗ4_отчет.md
 ├── README.md
-│
 ├── data\
 │   └── musiccaps_complete\
 │       ├── audio\
@@ -169,7 +166,7 @@ part1.2_enrich_metadata.py
 * В папке enriched/ для организации
 * Рядом с WAV файлами в audio/ (согласно требованию)
 
-[**metadata ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/audio/metadata)
+[**metadata ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/metadata)
 
 
 ## Часть 1.3: Модификация AudioCraft
