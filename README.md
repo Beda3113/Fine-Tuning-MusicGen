@@ -86,7 +86,7 @@
 ## Установка
 ```bash
 # 1. Клонировать репозиторий
-git clone https://github.com/facebookresearch/audiocraft.git
+https://github.com/Beda3113/Fine-Tuning-MusicGen
 cd audiocraft
 pip install -e .
 
