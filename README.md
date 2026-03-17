@@ -70,7 +70,7 @@
 ├── setup_v100.ps1
 └── requirements.txt
 ```
-
+[**ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete)
 
 ## Структура проекта
 - `data/musiccaps_complete/` - датасет MusicCaps
@@ -136,7 +136,7 @@ data/musiccaps_complete/
 | Недействительные ссылки | Пропуск видео, помеченных как удаленные/приватные | 2311 файлов пропущено |
 | Ошибки соединения | Повторные попытки (3 retries) | Только 78 ошибок |
 
-
+[**ДАТАСЕТ НА ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete)
 
 Часть 1.2: Обогащение метаданных
 ```
