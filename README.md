@@ -54,20 +54,8 @@
 │   │   └── ...
 │   └── setup.py
 │
-├── model_weights\
-│   ├── musicgen_finetuned\
-│   │   ├── pytorch_model.bin
-│   │   ├── config.json
-│   │   └── ...
-│   └── model_link.txt
-│
-├── tests\
-│   ├── test_json_schema.py
-│   └── test_audio_duration.py
-│
 ├── enrichment.log
 ├── training.log
-├── setup_v100.ps1
 └── requirements.txt
 ```
 [**ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete)
