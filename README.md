@@ -263,7 +263,7 @@ python scripts/prepare_data.py
 
 ### 1. Проверка данных
 ```powershell
-dir C:\Users\user\Desktop\последняя домашка DL\data\musiccaps_complete\*.jsonl.gz
+dir \data\musiccaps_complete\*.jsonl.gz
 
 # Конфиг датасета
 dir \audiocraft\config\dset\audio\musiccaps.yaml
