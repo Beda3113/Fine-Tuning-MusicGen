@@ -26,7 +26,7 @@
 ├── scripts\
 │   ├── part1.1_download.py
 │   ├── part1.2_enrich_metadata.py
-│   ├── part1.3_test_audiocraft.py
+│   ├── prepare_data.py
 │   ├── part1.4_train.py
 │   └── part2_generate.py
 │
@@ -95,7 +95,10 @@ pip install -r requirements.txt
 
 
 ##ЧАСТИ 1.1: Сбор данных MusicCaps
-
+```
+# Запуск скрипта
+python scripts/part1.1_download.py
+```
 Что было сделано:
 1. Разработан скрипт скачивания part1.1_download.py
 
@@ -144,7 +147,8 @@ ollama serve
 ```
 @@ -151,3 +155,15 @@ ollama pull llama3.2
 ```
-part1.2_enrich_metadata.py
+# Запуск скрипта
+python scripts/part1.2_enrich_metadata.py
 ```
 
 Выполненная работа
@@ -235,6 +239,11 @@ def to_condition_attributes(self) -> ConditioningAttributes:
 # Отчет по Части 1.4: Настройка конфигов и запуск обучения
 
 ## 1. Создание манифестов train/valid
+```
+# Запуск скрипта
+python scripts/prepare_data.py
+
+```
 - Из 3098 записей созданы train (2788, 90%) и valid (310, 10%)
 - Файлы сохранены в формате .jsonl.gz (требование AudioCraft)
 - Результат: `train.jsonl.gz` (0.5 MB), `valid.jsonl.gz` (0.1 MB)
@@ -260,10 +269,44 @@ def to_condition_attributes(self) -> ConditioningAttributes:
 | `drop_other_p` | 0.5 | Удаление других полей |
 
 ## 4. Запуск обучения
+# Запуск обучения (Часть 1.4)
+
+## Предварительные требования
+
+### 1. Проверка данных
 ```powershell
+dir C:\Users\user\Desktop\последняя домашка DL\data\musiccaps_complete\*.jsonl.gz
+
+# Конфиг датасета
+dir \audiocraft\config\dset\audio\musiccaps.yaml
+
+# Конфиг обучения
+dir \audiocraft\config\solver\musicgen\musicgen_finetune.yaml
+
+# Активируйте conda окружение
 conda activate audiocraft
-cd audiocraft
+
+# Проверьте версию Python (должна быть 3.9)
+python --version
+
+
+
+# Для команды "default"
 $env:AUDIOCRAFT_TEAM = "default"
-$env:CUDA_VISIBLE_DEVICES = "1"
+
+# Проверка
+echo $env:CUDA_VISIBLE_DEVICES
+echo $env:AUDIOCRAFT_TEAM
+
+Запуск обучения
+
+# Базовый запуск
 python -m dora run solver=musicgen/musicgen_finetune
 
+# Или с явным указанием параметров
+python -m dora run solver=musicgen/musicgen_finetune `
+  model/lm/model_scale=small `
+  dataset.batch_size=4 `
+  optim.epochs=10 `
+  optim.lr=1e-4
+```
