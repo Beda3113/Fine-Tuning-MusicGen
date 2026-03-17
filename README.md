@@ -1,318 +1,92 @@
-# Домашнее задание 4: Fine-tuning MusicGen
+# AudioCraft
+![docs badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_docs/badge.svg)
+![linter badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_linter/badge.svg)
+![tests badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_tests/badge.svg)
+
+AudioCraft is a PyTorch library for deep learning research on audio generation. AudioCraft contains inference and training code
+for two state-of-the-art AI generative models producing high-quality audio: AudioGen and MusicGen.
 
 
-```
-├── README.md
-├── data\
-│   └── musiccaps_complete\
-│       ├── audio\
-│       │   ├── E4To9BC2jx8.wav
-│       │   ├── ZkGQhIbEDrs.wav
-│       │   └── ...
-│       │
-│       ├── metadata\
-│       │   ├── E4To9BC2jx8.txt
-│       │   ├── ZkGQhIbEDrs.txt
-│       │   └── ...
-│       │
-│       ├── enriched\
-│       │   ├── E4To9BC2jx8.json
-│       │   ├── ZkGQhIbEDrs.json
-│       │   └── ...
-│       │
-│       ├── manifest.jsonl
-│       └── dataset_stats.json
-│
-├── scripts\
-│   ├── part1.1_download.py
-│   ├── part1.2_enrich_metadata.py
-│   ├── part1.3_test_audiocraft.py
-│   ├── part1.4_train.py
-│   └── part2_generate.py
-│
-├── configs\
-│   ├── train_musiccaps.yaml
-│   └── generation.yaml
-│
-├── output\
-│   ├── generated\
-│   │   ├── prompt_1.wav
-│   │   ├── prompt_2.wav
-│   │   ├── prompt_3.wav
-│   │   ├── prompt_4.wav
-│   │   └── prompt_5.wav
-│   └── logs\
-│       ├── training.log
-│       └── generation.log
-│
-├── audiocraft\
-│   ├── audiocraft\
-│   │   ├── data\
-│   │   │   └── music_dataset.py
-│   │   └── ...
-│   ├── config\
-│   │   └── ...
-│   └── setup.py
-│
-├── model_weights\
-│   ├── musicgen_finetuned\
-│   │   ├── pytorch_model.bin
-│   │   ├── config.json
-│   │   └── ...
-│   └── model_link.txt
-│
-├── tests\
-│   ├── test_json_schema.py
-│   └── test_audio_duration.py
-│
-├── enrichment.log
-├── training.log
-├── setup_v100.ps1
-└── requirements.txt
+## Installation
+AudioCraft requires Python 3.9, PyTorch 2.1.0. To install AudioCraft, you can run the following:
+
+```shell
+# Best to make sure you have torch installed first, in particular before installing xformers.
+# Don't run this if you already have PyTorch installed.
+python -m pip install 'torch==2.1.0'
+# You might need the following before trying to install the packages
+python -m pip install setuptools wheel
+# Then proceed to one of the following
+python -m pip install -U audiocraft  # stable release
+python -m pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
+python -m pip install -e .  # or if you cloned the repo locally (mandatory if you want to train).
+python -m pip install -e '.[wm]'  # if you want to train a watermarking model
 ```
 
-[**ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete)
-
-## Структура проекта
-- `data/musiccaps_complete/` - датасет MusicCaps
-- `scripts/` - скрипты для всех этапов
-- `audiocraft/` - модифицированный AudioCraft
-- `output/generated/` - сгенерированные треки
-- `model_weights/` - веса обученной модели
-
-
-
-
-## Установка
+We also recommend having `ffmpeg` installed, either through your system or Anaconda:
 ```bash
-# 1. Клонировать репозиторий
-https://github.com/Beda3113/Fine-Tuning-MusicGen
-cd audiocraft
-pip install -e .
-
-# 2. Установить зависимости
-pip install -r requirements.txt
+sudo apt-get install ffmpeg
+# Or if you are using Anaconda or Miniconda
+conda install "ffmpeg<5" -c conda-forge
 ```
 
+## Models
 
-## ЧАСТИ 1.1: Сбор данных MusicCaps
+At the moment, AudioCraft contains the training code and inference code for:
+* [MusicGen](./docs/MUSICGEN.md): A state-of-the-art controllable text-to-music model.
+* [AudioGen](./docs/AUDIOGEN.md): A state-of-the-art text-to-sound model.
+* [EnCodec](./docs/ENCODEC.md): A state-of-the-art high fidelity neural audio codec.
+* [Multi Band Diffusion](./docs/MBD.md): An EnCodec compatible decoder using diffusion.
+* [MAGNeT](./docs/MAGNET.md): A state-of-the-art non-autoregressive model for text-to-music and text-to-sound.
+* [AudioSeal](./docs/WATERMARKING.md): A state-of-the-art audio watermarking.
+* [MusicGen Style](./docs/MUSICGEN_STYLE.md): A state-of-the-art text-and-style-to-music model.
+* [JASCO](./docs/JASCO.md): "High quality text-to-music model conditioned on chords, melodies and drum tracks"
 
+
+## Training code
+
+AudioCraft contains PyTorch components for deep learning research in audio and training pipelines for the developed models.
+For a general introduction of AudioCraft design principles and instructions to develop your own training pipeline, refer to
+the [AudioCraft training documentation](./docs/TRAINING.md).
+
+For reproducing existing work and using the developed training pipelines, refer to the instructions for each specific model
+that provides pointers to configuration, example grids and model/task-specific information and FAQ.
+
+
+## API documentation
+
+We provide some [API documentation](https://facebookresearch.github.io/audiocraft/api_docs/audiocraft/index.html) for AudioCraft.
+
+
+## FAQ
+
+#### Is the training code available?
+
+Yes! We provide the training code for [EnCodec](./docs/ENCODEC.md), [MusicGen](./docs/MUSICGEN.md),[Multi Band Diffusion](./docs/MBD.md) and [JASCO](./docs/JASCO.md).
+
+#### Where are the models stored?
+
+Hugging Face stored the model in a specific location, which can be overridden by setting the `AUDIOCRAFT_CACHE_DIR` environment variable for the AudioCraft models.
+In order to change the cache location of the other Hugging Face models, please check out the [Hugging Face Transformers documentation for the cache setup](https://huggingface.co/docs/transformers/installation#cache-setup).
+Finally, if you use a model that relies on Demucs (e.g. `musicgen-melody`) and want to change the download location for Demucs, refer to the [Torch Hub documentation](https://pytorch.org/docs/stable/hub.html#where-are-my-downloaded-models-saved).
+
+
+## License
+* The code in this repository is released under the MIT license as found in the [LICENSE file](LICENSE).
+* The models weights in this repository are released under the CC-BY-NC 4.0 license as found in the [LICENSE_weights file](LICENSE_weights).
+
+
+## Citation
+
+For the general framework of AudioCraft, please cite the following.
 ```
-python scripts/part1.2_enrich_metadata.py
-```
-
-Что было сделано:
-1. Разработан скрипт скачивания part1.1_download.py
-
- - Загрузка метаданных с HuggingFace
- - Использование yt-dlp + ffmpeg для вырезания 10-секундных фрагментов
- - Параллельная загрузка с контролем потоков
-
-2. Полученные данные:
-
-```
-data/musiccaps_complete/
-├── audio/          # 3132 WAV файла (10 сек, ~1 MB каждый)
-└── metadata/       # 3132 TXT файла с описаниями
-```
-Характеристики датасета:
-
-
-## Характеристики полученного датасета
-
-| Параметр | Значение |
-|----------|----------|
-| Всего файлов в датасете | 5521 |
-| Успешно скачано | 3132 |
-| Недействительные ссылки | 2311 |
-| Ошибки при скачивании | 78 |
-| Процент успеха | 57% |
-| Общий объем данных | 3 GB |
-| Средний размер файла | 1 MB |
-| Длительность | 10 секунд |
-| Формат | WAV, моно |
-
-## Проблемы и решения
-
-| Проблема | Решение | Результат |
-|----------|----------|-----------|
-| Блокировка YouTube | Использование cookies + паузы между запросами | Удалось скачать 3132 файла |
-| Отсутствие cookies | Экспорт через расширение браузера "Get cookies.txt" | Успешная авторизация |
-| Недействительные ссылки | Пропуск видео, помеченных как удаленные/приватные | 2311 файлов пропущено |
-| Ошибки соединения | Повторные попытки (3 retries) | Только 78 ошибок |
-
-[**ДАТАСЕТ ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/audio)
-
-## Часть 1.2: Обогащение метаданных
-```
-ollama serve
-```
-```
-ollama pull llama3.2
-```
-```
-part1.2_enrich_metadata.py
+@inproceedings{copet2023simple,
+    title={Simple and Controllable Music Generation},
+    author={Jade Copet and Felix Kreuk and Itai Gat and Tal Remez and David Kant and Gabriel Synnaeve and Yossi Adi and Alexandre Défossez},
+    booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+    year={2023},
+}
 ```
 
-Выполненная работа
- Разработка скрипта обогащения
- Создан скрипт part1.2_enrich_metadata.py, который выполняет следующие функции:
-
-- Загрузка исходных описаний из папки metadata/
-- Отправка запросов к локальной Llama 3 через Ollama с использованием V100 GPU
-- Извлечение структурированных данных в соответствии с требуемой JSON-схемой
-- Валидация и дополнение отсутствующих полей
-- Сохранение результатов в двух местах:
-* В папке enriched/ для организации
-* Рядом с WAV файлами в audio/ (согласно требованию)
-
-[**metadata ЯНДЕКС.ДИСКА**](https://disk.yandex.ru/client/disk/УЧЕБА%20/data/musiccaps_complete/metadata)
-
-
-## Часть 1.3: Модификация AudioCraft
-
-
-1. Клон репозитория AudioCraft
-```
-git clone https://github.com/facebookresearch/audiocraft.git
-cd audiocraft
-```
-2. Модификация файла music_dataset.py
-
-Путь к файлу: audiocraft/audiocraft/data/music_dataset.py
-
-```
-@dataclass
-class MusicInfo(AudioInfo):
-    # ... существующие поля ...
-    
-    # НОВЫЕ ПОЛЯ ИЗ JSON-СХЕМЫ
-    general_mood: tp.Optional[str] = None          # общее настроение
-    genre_tags: tp.Optional[list] = None           # теги жанров (список)
-    lead_instrument: tp.Optional[str] = None       # основной инструмент
-    accompaniment: tp.Optional[str] = None         # аккомпанемент
-    tempo_and_rhythm: tp.Optional[str] = None      # темп и ритм
-    vocal_presence: tp.Optional[str] = None        # вокал
-    production_quality: tp.Optional[str] = None    # качество продакшна
-```
-
-Обновленный метод attribute_getter:
-```
-@staticmethod
-def attribute_getter(attribute):
-    if attribute == 'bpm':
-        preprocess_func = get_bpm
-    elif attribute == 'key':
-        preprocess_func = get_musical_key
-    elif attribute in ['moods', 'keywords', 'genre_tags']:  # ДОБАВЛЕНО genre_tags
-        preprocess_func = get_keyword_list
-    elif attribute in ['genre', 'name', 'instrument', 'lead_instrument']:  # ДОБАВЛЕНО lead_instrument
-        preprocess_func = get_keyword
-    elif attribute in ['title', 'artist', 'description', 'general_mood', 
-                      'accompaniment', 'tempo_and_rhythm', 'vocal_presence', 
-                      'production_quality']:  # ДОБАВЛЕНЫ все новые текстовые поля
-        preprocess_func = get_string
-    else:
-        preprocess_func = None
-    return preprocess_func
-```
-Обновленный метод to_condition_attributes:
-
-```
-def to_condition_attributes(self) -> ConditioningAttributes:
-    out = ConditioningAttributes()
-    for _field in fields(self):
-        key, value = _field.name, getattr(self, _field.name)
-        if key == 'self_wav':
-            out.wav[key] = value
-        elif key == 'joint_embed':
-            for embed_attribute, embed_cond in value.items():
-                out.joint_embed[embed_attribute] = embed_cond
-        else:
-            if isinstance(value, list):
-                value = ' '.join(value)
-            out.text[key] = value  # ВСЕ ПОПАДАЮТ В ТЕКСТОВЫЕ УСЛОВИЯ
-    return out
-```
-
-Модифицированный AudioCraft готов к использованию структурированных данных для обучения
-
-
-## Части 1.4: Настройка конфигов и запуск обучения
-
-1. Создание манифестов train/valid
-2. Создание конфигурационных файлов
- 2.1 Конфиг датасета audiocraft/config/dset/audio/musiccaps.yaml
-```
-   # @package __global__
-
-datasource:
-  max_sample_rate: 32000
-  max_channels: 1
-  
-  train: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/train.jsonl.gz
-  valid: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
-  evaluate: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
-  generate: C:/Users/user/Desktop/последняя домашка DL/data/musiccaps_complete/valid.jsonl.gz
-  ```
-2.2 Конфиг обучения audiocraft/config/solver/musicgen/musicgen_finetune.yaml
-
-```
-# @package __global__
-
-defaults:
-  - musicgen/default
-  - /model: lm/musicgen_lm
-  - override /dset: audio/musiccaps
-  - _self_
-
-autocast: true
-autocast_dtype: float16
-
-# Используем предобученную MusicGen-small
-compression_model_checkpoint: //reference/facebook/musicgen-small
-
-channels: 1
-sample_rate: 32000
-
-deadlock:
-  use: true
-
-dataset:
-  batch_size: 4  # Для V100 16GB
-  num_workers: 4
-  segment_duration: 10
-  min_segment_ratio: 1.0
-  sample_on_weight: false
-  sample_on_duration: false
-  
-  train:
-    # Параметры для работы с новыми полями и CFG
-    merge_text_p: 0.25    # 25% - объединение всех полей
-    drop_desc_p: 0.5      # 50% - удаление description
-    drop_other_p: 0.5     # 50% - удаление других полей
-
-optim:
-  epochs: 10
-  optimizer: adamw
-  lr: 1e-4
-  ema:
-    use: true
-    updates: 10
-    device: cuda
-
-logging:
-  log_tensorboard: true
-  log_wandb: false
-
-schedule:
-  lr_scheduler: inverse_sqrt
-  inverse_sqrt:
-    warmup: 1500
-    warmup_init_lr: 0.0
-
-checkpoint:
-  save_every: 5
-  keep_last: 3
-```
-
+When referring to a specific model, please cite as mentioned in the model specific README, e.g
+[./docs/MUSICGEN.md](./docs/MUSICGEN.md), [./docs/AUDIOGEN.md](./docs/AUDIOGEN.md), etc.
