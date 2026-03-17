@@ -1,0 +1,16 @@
+{
+  "description": "Distorted male vocal performance over repetitive electric guitar, bass, and drums in a live setting",
+  "general_mood": "energetic, loud",
+  "genre_tags": [
+    "rock"
+  ],
+  "lead_instrument": "distorted male vocals",
+  "accompaniment": "electric guitar, bass, drums",
+  "tempo_and_rhythm": "energetic",
+  "vocal_presence": "solo",
+  "production_quality": "low quality, poor recording",
+  "ytid": "_1woPC5HWSg",
+  "original_caption": "ytid: _1woPC5HWSg\nstart_s: 30\ncaption: The low quality recording features a live performance of a rock song and it consists of a distorted male vocal singing over repetitive electric guitar melody, groovy bass and energetic drums. It sounds crushed, distorted, loud, but it is barely audible, as it was recorded with a poor quality microphone.",
+  "model": "llama3",
+  "enriched_date": "2026-03-17T17:51:20.566984"
+}

@@ -1,0 +1,17 @@
+{
+  "description": "Passionate male vocal with harmonizing mixed vocals over acoustic rhythm guitar, accordion, and bass",
+  "general_mood": "passionate, joyful",
+  "genre_tags": [
+    "folk",
+    "world"
+  ],
+  "lead_instrument": "male vocal",
+  "accompaniment": "acoustic rhythm guitar, accordion, groovy bass",
+  "tempo_and_rhythm": "groovy",
+  "vocal_presence": "solo/choir",
+  "production_quality": "low quality, mono recording",
+  "ytid": "_2P_EJsnBls",
+  "original_caption": "ytid: _2P_EJsnBls\nstart_s: 80\ncaption: The low quality recording features a passionate male vocal, alongside harmonizing mixed vocals, singing over acoustic rhythm guitar, accordion melody and groovy bass. It sounds passionate and joyful. The recording is noisy and in mono - the sound is coming from the right channel only.",
+  "model": "llama3",
+  "enriched_date": "2026-03-17T17:51:24.384473"
+}
